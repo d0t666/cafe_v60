@@ -1,190 +1,325 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Công Thức Pha Cà Phê V60</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-        }
-        .title {
-            color: #333;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background: white;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-        }
-        .button {
-            padding: 10px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 5px;
-        }
-        .button:hover {
-            background-color: #218838;
-        }
-        .timer {
-            font-size: 24px;
-            margin: 20px 0;
-        }
-        .milestone {
-            display: flex;
-            justify-content: space-between;
-        }
-        .milestone__text {
-            color: #333;
-        }
-        .milestone__tick {
-            color: green;
-            display: none; /* Mặc định không hiển thị */
-        }
-    </style>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Công Thức Pha Cà Phê V60</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+        <!-- reset -->
+        <link rel="stylesheet" href="./css/reset.css" />
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                background-color: #f4f4f4;
+            }
+            .title {
+                color: #333;
+                font-size: 26px;
+                margin-bottom: 10px;
+            }
+            .container {
+                max-width: 600px;
+                margin: auto;
+                padding: 20px;
+                background: white;
+                border-radius: 5px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            .head__container {
+                border: none;
+                box-shadow: none;
+            }
+            .input {
+                width: 100%;
+                padding: 10px;
+                margin: 10px 0;
+            }
+            .button {
+                padding: 16px;
+                background-color: #28a745;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-right: 5px;
+            }
+            .button:hover {
+                background-color: #218838;
+            }
+            .timer {
+                font-size: 24px;
+                margin: 20px 0;
+            }
+            .milestone {
+                /* display: flex; */
+                /* justify-content: space-between;
+                align-items: center; */
+                gap: 8px;
+                margin-top: 15px;
+                line-height: 1.5;
+            }
+            .milestone__details {
+                display: block;
+            }
 
-<div class="container">
-    <h1 class="title">Công Thức Pha Cà Phê V60</h1>
-    <p>Nhập số gram cà phê bạn muốn sử dụng:</p>
-    <input type="number" class="input" id="coffeeWeight" placeholder="Số gram cà phê" value="15" min="1" />
-    
-    <p>Nhập tỷ lệ pha cà phê (ví dụ: 15.555):</p>
-    <input type="number" class="input" id="ratio" placeholder="Tỷ lệ pha" value="15" step="0.001" min="1" />
+            .milestone__target {
+                display: block;
+                float: right; /* Nếu bạn muốn nó nằm bên phải */
+                /* font-weight: 600; */
+            }
 
-    <h2 class="title">Hướng Dẫn Pha Chế</h2>
-    <div id="instructions"></div>
+            .milestone__text {
+                color: #333;
+            }
+            .milestone__tick {
+                color: green;
+                display: none; /* Mặc định không hiển thị */
+            }
+            .target {
+                color: #007bff; /* Màu xanh dương cho Target */
+                font-weight: bold;
+            }
+            /* input  */
+            .input-block {
+                margin-bottom: 20px; /* Khoảng cách giữa các block */
+            }
 
-    <div class="timer">
-        <span id="time">00:00</span>
-    </div>
-    
-    <button class="button" onclick="startTimer()">Bắt Đầu</button>
-    <button class="button" onclick="stopTimer()">Dừng</button>
-    <button class="button" onclick="resetTimer()">Đặt Lại</button>
-</div>
+            .input-group {
+                margin-bottom: 15px; /* Khoảng cách giữa các nhóm */
+            }
 
-<script>
-    let timerInterval;
-    let seconds = 0;
+            .input-label {
+                margin-bottom: 5px; /* Khoảng cách giữa nhãn và ô nhập */
+            }
 
-    function calculate() {
-        const coffeeWeight = parseInt(document.getElementById('coffeeWeight').value);
-        const ratio = parseFloat(document.getElementById('ratio').value);
-        
-        if (isNaN(coffeeWeight) || coffeeWeight <= 0) {
-            alert("Vui lòng nhập số gram cà phê hợp lệ.");
-            return;
-        }
+            .input {
+                width: 100%; /* Đảm bảo ô nhập chiếm toàn bộ chiều rộng của nhóm */
+                height: 38px; /* Đặt chiều cao cố định cho các ô nhập */
+                padding: 0.375rem 0.75rem; /* Padding cho ô nhập */
+                border: 1px solid #ced4da; /* Border cho ô nhập */
+                border-radius: 0.25rem; /* Border-radius cho ô nhập */
+                box-sizing: border-box; /* Đảm bảo padding và border không làm tăng chiều rộng tổng cộng */
+            }
 
-        if (isNaN(ratio) || ratio <= 0) {
-            alert("Vui lòng nhập tỷ lệ pha hợp lệ.");
-            return;
-        }
+            /* Ngăn zoom khi nhập trên iOS */
+            input[type="number"] {
+                font-size: 16px; /* Đảm bảo kích thước phông chữ không nhỏ hơn 16px */
+            }
+            /* timebrew */
+            .timebrew__wrap {
+                margin: 15px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1 class="title">Công Thức Pha Cà Phê V60</h1>
+            <div class="input-block">
+                <div class="input-group">
+                    <label class="input-label">Nhập số gram cà phê bạn muốn sử dụng:</label>
+                    <input
+                        type="number"
+                        class="input"
+                        id="coffeeWeight"
+                        placeholder="Số gram cà phê"
+                        value="15"
+                        min="1"
+                    />
+                </div>
 
-        // Tính toán lượng nước cần thiết
-        const waterForBloom = coffeeWeight * 3; // Nước cho Bloom
-        const remainingWater = (coffeeWeight * ratio) - waterForBloom; // Nước còn lại
-        const waterForPour = Math.round(remainingWater / 3); // Nước cho từng lần rót (chia đều cho 3 lần)
+                <div class="input-group">
+                    <label class="input-label">Nhập tỷ lệ pha cà phê (ví dụ: 15.555):</label>
+                    <input
+                        type="number"
+                        class="input"
+                        id="ratio"
+                        placeholder="Tỷ lệ pha"
+                        value="15"
+                        step="0.001"
+                        min="1"
+                    />
+                </div>
+            </div>
 
-        // Thời gian rót và nhiệt độ
-        const instructions = `
+            <h2 class="title">Hướng Dẫn Pha Chế</h2>
+            <div id="instructions"></div>
+
+            <div class="timer">
+                <span id="time">00:00</span>
+            </div>
+
+            <button class="button" onclick="startTimer()">Bắt Đầu</button>
+            <button class="button" onclick="stopTimer()">Dừng</button>
+            <button class="button" onclick="resetTimer()">Đặt Lại</button>
+        </div>
+
+        <script>
+            let timerInterval;
+            let seconds = 0;
+
+            function calculate() {
+                const coffeeWeight = parseInt(document.getElementById("coffeeWeight").value);
+                const ratio = parseFloat(document.getElementById("ratio").value);
+
+                if (isNaN(coffeeWeight) || coffeeWeight <= 0) {
+                    alert("Vui lòng nhập số gram cà phê hợp lệ.");
+                    return;
+                }
+
+                if (isNaN(ratio) || ratio <= 0) {
+                    alert("Vui lòng nhập tỷ lệ pha hợp lệ.");
+                    return;
+                }
+
+                // Tính toán lượng nước cần thiết
+                const waterForBloom = coffeeWeight * 3; // Nước cho Bloom
+                const remainingWater = coffeeWeight * ratio - waterForBloom; // Nước còn lại
+                const waterForPour = Math.round(remainingWater / 3); // Nước cho từng lần rót (chia đều cho 3 lần)
+
+                // Thời gian rót và nhiệt độ
+                const instructions = `
         <h3 class="title">Công Thức Pha Chế</h3>
         <ul>
             <li><strong>Số gram cà phê:</strong> ${coffeeWeight}g</li>
             <li><strong>Nước cần dùng:</strong> ${(waterForBloom + remainingWater).toFixed(2)}g (tỷ lệ 1:${ratio})</li>
             <li><strong>Nước cho bloom:</strong> ${waterForBloom.toFixed(2)}g (rót trong 45 giây)</li>
         </ul>
-        <h4 class="title">Thời gian và quy trình:</h4>
-      <ol>
-    <li>Rót <strong>${waterForBloom.toFixed(2)}</strong>g nước vào cà phê và để trong <strong>45 giây</strong> <span class="milestone__tick" id="tick-1">✔️</span> (Thời gian: <strong>00:00 - 00:45</strong>).</li>
-    <li>Rót thêm nước theo từng bước:</li>
-    <ul>
-        <li>Rót <strong>${waterForPour.toFixed(2)}</strong>g trong khoảng <strong>20 giây</strong> <span class="milestone__tick" id="tick-2">✔️</span> (Thời gian: <strong>00:45 - 01:05</strong>).</li>
-        <li>Chờ thêm <strong>10 giây</strong> <span class="milestone__tick" id="tick-3">✔️</span> (Thời gian: <strong>01:05 - 01:15</strong>).</li>
-        <li>Rót tiếp <strong>${waterForPour.toFixed(2)}</strong>g trong khoảng <strong>20 giây</strong> <span class="milestone__tick" id="tick-4">✔️</span> (Thời gian: <strong>01:15 - 01:35</strong>).</li>
-        <li>Chờ thêm <strong>10 giây</strong> <span class="milestone__tick" id="tick-5">✔️</span> (Thời gian: <strong>01:35 - 01:45</strong>).</li>
-        <li>Rót tiếp <strong>${waterForPour.toFixed(2)}</strong>g trong khoảng <strong>20 giây</strong> <span class="milestone__tick" id="tick-6">✔️</span> (Thời gian: <strong>01:45 - 02:05</strong>).</li>
-        <li>Chờ thêm <strong>10 giây</strong> cuối cùng <span class="milestone__tick" id="tick-7">✔️</span> (Thời gian: <strong>02:05 - 02:15</strong>). </li>
-    </ul>
-    <li>Tổng thời gian pha chế khoảng <strong>2 phút 15 giây</strong>.</li>
-</ol>
+<div class="timebrew__wrap">
+    <h4 class="title">Thời gian và quy trình:</h4>
+    <ol>
+        <li class="milestone">
+            Rót <strong>${waterForBloom.toFixed(2)}</strong>g nước vào cà phê và để trong <strong>45 giây</strong> 
+            <span class="milestone__tick" id="tick-1">✔️</span>
+            <div class="milestone__details">
+                (Thời gian: <strong>00:00 - 00:45</strong>)
+                <div class="milestone__target target">Target: ${waterForBloom.toFixed(2)}g</div>
+            </div>
+        </li>
+        <li>Rót thêm nước theo từng bước:</li>
+        <ul>
+            <li class="milestone">
+                Rót <strong>${waterForPour.toFixed(2)}</strong>g trong khoảng <strong>20 giây</strong>
+                <span class="milestone__tick" id="tick-2">✔️</span>
+                <div class="milestone__details">
+                    (Thời gian: <strong>00:45 - 01:05</strong>)
+                    <div class="milestone__target target">Target: ${(waterForBloom + waterForPour).toFixed(2)}g</div>
+                </div>
+            </li>
+            <li class="milestone">
+                Chờ thêm <strong>10 giây</strong> 
+                <span class="milestone__tick" id="tick-3">✔️</span>
+                <div class="milestone__details">
+                    (Thời gian: <strong>01:05 - 01:15</strong>)
+                </div>
+            </li>
+            <li class="milestone">
+                Rót tiếp <strong>${waterForPour.toFixed(2)}</strong>g trong khoảng <strong>20 giây</strong>
+                <span class="milestone__tick" id="tick-4">✔️</span>
+                <div class="milestone__details">
+                    (Thời gian: <strong>01:15 - 01:35</strong>)
+                    <div class="milestone__target target">Target: ${(waterForBloom + waterForPour * 2).toFixed(
+                        2
+                    )}g</div>
+                </div>
+            </li>
+            <li class="milestone">
+                Chờ thêm <strong>10 giây</strong> 
+                <span class="milestone__tick" id="tick-5">✔️</span>
+                <div class="milestone__details">
+                    (Thời gian: <strong>01:35 - 01:45</strong>)
+                </div>
+            </li>
+            <li class="milestone">
+                Rót tiếp <strong>${waterForPour.toFixed(2)}</strong>g trong khoảng <strong>20 giây</strong>
+                <span class="milestone__tick" id="tick-6">✔️</span>
+                <div class="milestone__details">
+                    (Thời gian: <strong>01:45 - 02:05</strong>)
+                    <div class="milestone__target target">Target: ${(waterForBloom + waterForPour * 3).toFixed(
+                        2
+                    )}g</div>
+                </div>
+            </li>
+            <li class="milestone">
+                Chờ thêm <strong>10 giây</strong> cuối cùng 
+                <span class="milestone__tick" id="tick-7">✔️</span>
+                <div class="milestone__details">
+                    (Thời gian: <strong>02:05 - 02:15</strong>)
+                </div>
+            </li>
+        </ul>
+        <li>Tổng thời gian pha chế khoảng <strong>2 phút 15 giây</strong>.</li>
+    </ol>
+</div>
+
+
+
+
+
 
 
         <h4 class="title">Nhiệt độ nước:</h4>
         <p>Nước nên được đun sôi ở khoảng <strong>90-95°C</strong> cho cà phê rang sáng.</p>
         `;
 
-        document.getElementById('instructions').innerHTML = instructions;
+                document.getElementById("instructions").innerHTML = instructions;
 
-        // Reset dấu tick
-        resetTicks();
-    }
+                // Reset dấu tick
+                resetTicks();
+            }
 
-    function startTimer() {
-        clearInterval(timerInterval);
-        seconds = 0; // Reset lại giây
-        timerInterval = setInterval(function() {
-            seconds++;
-            document.getElementById('time').innerText = formatTime(seconds);
+            function startTimer() {
+                clearInterval(timerInterval);
+                seconds = 0; // Reset lại giây
+                timerInterval = setInterval(function () {
+                    seconds++;
+                    document.getElementById("time").innerText = formatTime(seconds);
 
-            // Kiểm tra mốc thời gian và hiển thị dấu tick tương ứng
-            if (seconds === 45) document.getElementById('tick-1').style.display = 'inline'; // Rót lần đầu
-            if (seconds === 55) document.getElementById('tick-2').style.display = 'inline'; // Rót thêm nước
-            if (seconds === 65) document.getElementById('tick-3').style.display = 'inline'; // Chờ thêm
-            if (seconds === 75) document.getElementById('tick-4').style.display = 'inline'; // Rót tiếp
-            if (seconds === 85) document.getElementById('tick-5').style.display = 'inline'; // Chờ thêm
-            if (seconds === 95) document.getElementById('tick-6').style.display = 'inline'; // Rót tiếp
-            if (seconds === 105) document.getElementById('tick-7').style.display = 'inline'; // Chờ thêm cuối
-        }, 1000);
-    }
+                    // Kiểm tra mốc thời gian và hiển thị dấu tick tương ứng
+                    if (seconds === 45) document.getElementById("tick-1").style.display = "inline"; // Rót lần đầu
+                    if (seconds === 55) document.getElementById("tick-2").style.display = "inline"; // Rót thêm nước
+                    if (seconds === 65) document.getElementById("tick-3").style.display = "inline"; // Chờ thêm
+                    if (seconds === 75) document.getElementById("tick-4").style.display = "inline"; // Rót tiếp
+                    if (seconds === 85) document.getElementById("tick-5").style.display = "inline"; // Chờ thêm
+                    if (seconds === 95) document.getElementById("tick-6").style.display = "inline"; // Rót tiếp
+                    if (seconds === 105) document.getElementById("tick-7").style.display = "inline"; // Chờ thêm cuối
+                }, 1000);
+            }
 
-    function stopTimer() {
-        clearInterval(timerInterval);
-    }
+            function stopTimer() {
+                clearInterval(timerInterval);
+            }
 
-    function resetTimer() {
-        clearInterval(timerInterval);
-        seconds = 0;
-        document.getElementById('time').innerText = "00:00";
-        
-        // Reset dấu tick
-        resetTicks();
-    }
+            function resetTimer() {
+                clearInterval(timerInterval);
+                seconds = 0;
+                document.getElementById("time").innerText = "00:00";
 
-    function resetTicks() {
-        for (let i = 1; i <= 7; i++) {
-            document.getElementById(`tick-${i}`).style.display = 'none';
-        }
-    }
+                // Reset dấu tick
+                resetTicks();
+            }
 
-    function formatTime(sec) {
-        const minutes = Math.floor(sec / 60);
-        const secondsLeft = sec % 60;
-        return `${String(minutes).padStart(2, '0')}:${String(secondsLeft).padStart(2, '0')}`;
-    }
+            function resetTicks() {
+                for (let i = 1; i <= 7; i++) {
+                    document.getElementById(`tick-${i}`).style.display = "none";
+                }
+            }
 
-    // Thêm sự kiện lắng nghe cho các trường nhập liệu
-    document.getElementById('coffeeWeight').addEventListener('input', calculate);
-    document.getElementById('ratio').addEventListener('input', calculate);
+            function formatTime(sec) {
+                const minutes = Math.floor(sec / 60);
+                const secondsLeft = sec % 60;
+                return `${String(minutes).padStart(2, "0")}:${String(secondsLeft).padStart(2, "0")}`;
+            }
 
-    // Tính toán ngay khi tải trang
-    window.onload = calculate;
+            // Thêm sự kiện lắng nghe cho các trường nhập liệu
+            document.getElementById("coffeeWeight").addEventListener("input", calculate);
+            document.getElementById("ratio").addEventListener("input", calculate);
 
-</script>
-
-</body>
+            // Tính toán ngay khi tải trang
+            window.onload = calculate;
+        </script>
+    </body>
 </html>
