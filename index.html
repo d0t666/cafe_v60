@@ -54,6 +54,64 @@
                 font-size: 24px;
                 margin: 20px 0;
             }
+            /* header */
+            footer {
+                margin-top: 40px;
+                padding: 10px;
+                text-align: center;
+                border-top: 1px solid #ccc;
+            }
+            /* CSS cho menu */
+            /* CSS cho menu */
+            .menu {
+                display: none; /* Ẩn menu mặc định */
+                flex-direction: column;
+                position: fixed;
+                top: 0;
+                left: -250px; /* Bắt đầu nằm ngoài màn hình */
+                width: 250px; /* Chiều rộng menu */
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.8); /* Overlay màu đen */
+                transition: left 0.3s ease; /* Hiệu ứng chuyển động */
+                z-index: 1000; /* Đặt trên các phần tử khác */
+                padding-top: 60px; /* Khoảng cách trên cùng */
+            }
+            .menu-item {
+                margin: 15px 0;
+                color: white;
+                text-align: center;
+                font-size: 24px;
+                text-decoration: none;
+            }
+            .toggle-menu {
+                display: none; /* Ẩn nút toggle trên desktop */
+            }
+            .close-menu {
+                color: white;
+                font-size: 24px;
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                cursor: pointer;
+            }
+
+            /* Media query cho thiết bị di động */
+            @media (max-width: 768px) {
+                .toggle-menu {
+                    display: block; /* Hiện nút toggle trên mobile */
+                    cursor: pointer;
+                    background-color: #007bff;
+                    color: white;
+                    padding: 10px;
+                    border: none;
+                    border-radius: 5px;
+                    margin-bottom: 12px;
+                }
+                .menu {
+                    display: flex; /* Hiện menu khi toggle */
+                    left: -250px; /* Bắt đầu nằm ngoài màn hình */
+                }
+            }
             .milestone {
                 /* display: flex; */
                 /* justify-content: space-between;
@@ -86,6 +144,8 @@
             /* input  */
             .input-block {
                 margin-bottom: 20px; /* Khoảng cách giữa các block */
+                display: flex;
+                column-gap: 16px;
             }
 
             .input-group {
@@ -123,7 +183,23 @@
     </head>
     <body>
         <div class="container">
+            <!-- Nút toggle menu cho di động -->
+            <button class="toggle-menu" onclick="toggleMenu()">Menu</button>
+
+            <!-- Menu -->
+            <div class="menu" id="menu">
+                <span class="close-menu" onclick="toggleMenu()">×</span>
+                <!-- Nút đóng menu -->
+                <a class="menu-item" href="page1.html">Trang 1</a>
+                <a class="menu-item" href="page2.html">Trang 2</a>
+                <a class="menu-item" href="page3.html">Trang 3</a>
+                <a class="menu-item" href="page4.html">Trang 4</a>
+                <a class="menu-item" href="page5.html">Trang 5</a>
+                <a class="menu-item" href="page6.html">Trang 6</a>
+                <a class="menu-item" href="page7.html">Trang 7</a>
+            </div>
             <h1 class="title">Công Thức Pha Cà Phê V60</h1>
+
             <div class="input-block">
                 <div class="input-group">
                     <label class="input-label">Nhập số gram cà phê bạn muốn sử dụng:</label>
@@ -324,6 +400,35 @@
 
             // Tính toán ngay khi tải trang
             window.onload = calculate;
+            // Hàm toggle menu
+            function toggleMenu() {
+                const menu = document.getElementById("menu");
+                if (menu.style.left === "0px") {
+                    menu.style.left = "-250px"; // Đưa menu ra ngoài màn hình
+                } else {
+                    menu.style.left = "0px"; // Hiện menu
+                }
+            }
+
+            // Hiện menu trên desktop
+            if (window.innerWidth > 768) {
+                document.querySelector(".toggle-menu").style.display = "none";
+                document.querySelector(".menu").style.display = "flex"; // Hiện menu trên desktop
+                document.getElementById("menu").style.left = "0"; // Đặt menu ở vị trí hiện tại
+            }
         </script>
+        <!-- Chân trang -->
+        <footer>
+            <div class="container">
+                <p>
+                    Để biết thêm thông tin, hãy xem tại:
+                    <a href="https://github.com/d0t666/cafe_v60" target="_blank">GitHub Repository cafe_v60</a>
+                    hoặc
+                    <a href="https://www.facebook.com/minh.northside/" target="_blank"
+                        >https://www.facebook.com/minh.northside/</a
+                    >
+                </p>
+            </div>
+        </footer>
     </body>
 </html>
