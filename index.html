@@ -4,7 +4,6 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Công Thức Pha Cà Phê V60</title>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
         <!-- reset -->
         <link rel="stylesheet" href="./css/reset.css" />
         <style>
@@ -47,12 +46,18 @@
                 cursor: pointer;
                 margin-right: 5px;
             }
+
             .button:hover {
                 background-color: #218838;
+            }
+            .button--red,
+            .button--red:hover {
+                background-color: red;
             }
             .timer {
                 font-size: 24px;
                 margin: 20px 0;
+                margin-bottom: 10px;
             }
             /* header */
             footer {
@@ -231,19 +236,12 @@
             <h2 class="title">Hướng Dẫn Pha Chế</h2>
             <div id="instructions"></div>
 
-            <div class="timer">
-                <span id="time">00:00</span>
-            </div>
-
-            <button class="button" onclick="startTimer()">Bắt Đầu</button>
-            <button class="button" onclick="stopTimer()">Dừng</button>
-            <button class="button" onclick="resetTimer()">Đặt Lại</button>
+            <div class="timer" id="timer">00:00</div>
+            <button class="button" id="startBtn" onclick="startTimer()">Bắt Đầu</button>
+            <button class="button button--red" id="stopBtn" onclick="stopTimer()" style="display: none">Dừng</button>
+            <button class="button" id="resetBtn" onclick="resetTimer()">Đặt Lại</button>
         </div>
-
         <script>
-            let timerInterval;
-            let seconds = 0;
-
             function calculate() {
                 const coffeeWeight = parseInt(document.getElementById("coffeeWeight").value);
                 const ratio = parseFloat(document.getElementById("ratio").value);
@@ -352,12 +350,15 @@
                 resetTicks();
             }
 
+            let timerInterval;
+            let seconds = 0; // Giây bắt đầu
+
             function startTimer() {
-                clearInterval(timerInterval);
-                seconds = 0; // Reset lại giây
+                if (timerInterval) return; // Nếu đang chạy thì không làm gì
+
                 timerInterval = setInterval(function () {
                     seconds++;
-                    document.getElementById("time").innerText = formatTime(seconds);
+                    document.getElementById("timer").innerText = formatTime(seconds);
 
                     // Kiểm tra mốc thời gian và hiển thị dấu tick tương ứng
                     if (seconds === 45) document.getElementById("tick-1").style.display = "inline"; // Rót lần đầu
@@ -368,19 +369,35 @@
                     if (seconds === 95) document.getElementById("tick-6").style.display = "inline"; // Rót tiếp
                     if (seconds === 105) document.getElementById("tick-7").style.display = "inline"; // Chờ thêm cuối
                 }, 1000);
+
+                // Hiện nút Dừng và ẩn nút Bắt Đầu
+                document.getElementById("startBtn").style.display = "none";
+                document.getElementById("stopBtn").style.display = "inline";
             }
 
             function stopTimer() {
                 clearInterval(timerInterval);
+                timerInterval = null; // Đặt lại timerInterval để biết rằng đồng hồ đã dừng lại
+
+                // Hiện nút Bắt Đầu và ẩn nút Dừng
+                document.getElementById("startBtn").innerText = "Tiếp Tục";
+                document.getElementById("startBtn").style.display = "inline";
+                document.getElementById("stopBtn").style.display = "none";
             }
 
             function resetTimer() {
                 clearInterval(timerInterval);
                 seconds = 0;
-                document.getElementById("time").innerText = "00:00";
+                document.getElementById("timer").innerText = "00:00";
+                timerInterval = null; // Reset timerInterval
 
                 // Reset dấu tick
                 resetTicks();
+
+                // Hiện nút Bắt Đầu và ẩn nút Dừng
+                document.getElementById("startBtn").innerText = "Bắt Đầu";
+                document.getElementById("startBtn").style.display = "inline";
+                document.getElementById("stopBtn").style.display = "none";
             }
 
             function resetTicks() {
