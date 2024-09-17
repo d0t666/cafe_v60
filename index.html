@@ -113,6 +113,12 @@
             .timebrew__wrap {
                 margin: 15px 0;
             }
+            /* instrucstion */
+            .instruction__list {
+                display: flex;
+                flex-direction: column;
+                gap: 7px;
+            }
         </style>
     </head>
     <body>
@@ -182,11 +188,11 @@
 
                 // Thời gian rót và nhiệt độ
                 const instructions = `
-        <h3 class="title">Công Thức Pha Chế</h3>
-        <ul>
+        <ul class="instruction__list">
             <li><strong>Số gram cà phê:</strong> ${coffeeWeight}g</li>
             <li><strong>Nước cần dùng:</strong> ${(waterForBloom + remainingWater).toFixed(2)}g (tỷ lệ 1:${ratio})</li>
-            <li><strong>Nước cho bloom:</strong> ${waterForBloom.toFixed(2)}g (rót trong 45 giây)</li>
+            <li><strong>Nước cho bloom:</strong> ${waterForBloom.toFixed(2)}g (bloom 45 giây)</li>
+        <p>Nước nên được đun sôi ở khoảng <strong>90-95°C</strong> cho cà phê rang light.</p>
         </ul>
 <div class="timebrew__wrap">
     <h4 class="title">Thời gian và quy trình:</h4>
@@ -261,8 +267,6 @@
 
 
 
-        <h4 class="title">Nhiệt độ nước:</h4>
-        <p>Nước nên được đun sôi ở khoảng <strong>90-95°C</strong> cho cà phê rang sáng.</p>
         `;
 
                 document.getElementById("instructions").innerHTML = instructions;
