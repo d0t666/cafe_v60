@@ -472,6 +472,22 @@
 
             // Tính toán ngay khi tải trang
             window.onload = calculate;
+            // Hàm toggle menu
+            function toggleMenu() {
+                const menu = document.getElementById("menu");
+                if (menu.style.left === "0px") {
+                    menu.style.left = "-250px"; // Đưa menu ra ngoài màn hình
+                } else {
+                    menu.style.left = "0px"; // Hiện menu
+                }
+            }
+
+            // Hiện menu trên desktop
+            if (window.innerWidth > 768) {
+                document.querySelector(".toggle-menu").style.display = "none";
+                document.querySelector(".menu").style.display = "flex"; // Hiện menu trên desktop
+                document.getElementById("menu").style.left = "0"; // Đặt menu ở vị trí hiện tại
+            }
         </script>
         <!-- Chân trang -->
         <footer>
